@@ -13,7 +13,7 @@ import { Merger } from '@ephox/katamari';
 declare let tinymce: any;
 
 export default function () {
-console.log('Teste');
+
   const settings = {
     skin_url: '../../../../js/tinymce/skins/lightgray',
     codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
