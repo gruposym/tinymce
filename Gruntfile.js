@@ -27,9 +27,22 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: packageData,
+    distAppPathProject: 'E:/MEUCONSULTORIO_DESENVOLVIMENTO/branches/inovacao/app/',
 
     shell: {
-      tsc: { command: 'node ./node_modules/typescript/bin/tsc' }
+      tsc: { 
+        command: 'node ./node_modules/typescript/bin/tsc' 
+      },
+
+      /* Constrói bundle do desktop */
+      'bundle-desktop': { 
+        command: 'grunt bundle --themes=modern --plugins=print,paste,preview,fullpage,searchreplace,autolink,directionality,visualblocks,visualchars,fullscreen,image,link,media,template,codesample,table,charmap,hr,pagebreak,nonbreaking,anchor,toc,insertdatetime,advlist,lists,textcolor,wordcount,imagetools,contextmenu,colorpicker,textpattern,help'
+      },
+
+      /* Constrói bundle do mobile */
+      'bundle-mobile': { 
+        command: 'grunt bundle --themes=mobile --plugins=print,fullpage,fullscreen,template,table,pagebreak'
+      }
     },
 
     tslint: {
@@ -322,6 +335,18 @@ module.exports = function (grunt) {
       'visualblocks-plugin': {
         files: [
           { src: 'src/plugins/visualblocks/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css' }
+        ]
+      },
+      'to-project-desktop': {
+        files: [
+          { src: 'js/tinymce/tinymce.full.js', dest: '<%= distAppPathProject %>lib/js/tinymce/tinymce.desktop.js'/*, flatten: true, expand: true*/ },
+          { src: 'js/tinymce/tinymce.full.min.js', dest: '<%= distAppPathProject %>lib/js/tinymce/tinymce.desktop.min.js'/*, flatten: true, expand: true*/ }
+        ]
+      },
+      'to-project-mobile': {
+        files: [
+          { src: 'js/tinymce/tinymce.full.js', dest: '<%= distAppPathProject %>lib/js/tinymce/tinymce.mobile.js'/*, flatten: true, expand: true*/ },
+          { src: 'js/tinymce/tinymce.full.min.js', dest: '<%= distAppPathProject %>lib/js/tinymce/tinymce.mobile.min.js'/*, flatten: true, expand: true*/ }
         ]
       }
     },
@@ -819,7 +844,9 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('start', ['webpack-dev-server']);
+  grunt.registerTask('bundle-tinymce', ['shell:bundle-desktop', 'copy:to-project-desktop', 'shell:bundle-mobile', 'copy:to-project-mobile']);
 
   grunt.registerTask('default', ['prod']);
   grunt.registerTask('test', ['bedrock-auto:phantomjs']);
+  //grunt.registerTask('copy-to-project', ['copy:to-project']);
 };
